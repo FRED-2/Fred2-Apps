@@ -153,19 +153,22 @@ def main():
 
     model.add_argument(
         '-fINDEL' ,'--filterINDEL',
-        action="store_true",
+        type=str,
+        default='true',
         help='Filter insertions and deletions (including frameshifts)'
         )
 
     model.add_argument(
         '-fFS' ,'--filterFSINDEL',
-        action="store_true",
+        type=str,
+        default='true',
         help='Filter frameshift INDELs'
         )
 
     model.add_argument(
         '-fSNP' ,'--filterSNP',
-        action="store_true",
+        type=str,
+        default='false',
         help='Filter SNPs'
         )
 
@@ -206,16 +209,16 @@ def main():
             variants = read_annovar_exonic(args.vcf, gene_filter=protein_ids)
 
 
-        if args.filterSNP:
+        if args.filterSNP == 'true':
             variants = filter(lambda x: x.type != VariationType.SNP, variants)
 
-        if args.filterINDEL:
+        if args.filterINDEL == 'true':
             variants = filter(lambda x: x.type not in [VariationType.INS,
                                                        VariationType.DEL,
                                                        VariationType.FSDEL,
                                                        VariationType.FSINS], variants)
 
-        if args.filterFSINDEL:
+        if args.filterFSINDEL == 'true':
             variants = filter(lambda x: x.type not in [VariationType.FSDEL, VariationType.FSINS], variants)
 
         if not variants:
